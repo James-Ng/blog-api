@@ -17,9 +17,18 @@ RSpec.describe UsersController, type: :controller do
   end
 
   describe "GET #show" do
+    before(:each) do
+      @user =   FactoryGirl.create :user
+      get :show, id: @user.id
+    end
+
     it "returns http success" do
-      get :show
       expect(response).to have_http_status(:success)
+    end
+
+    it 'returns the user just created' do
+      @user_response = JSON.parse(response.body)
+      expect(@user_response['email'] ).to eql @user.email
     end
   end
 
