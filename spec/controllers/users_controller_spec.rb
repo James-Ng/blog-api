@@ -18,7 +18,7 @@ RSpec.describe UsersController, type: :controller do
 
   describe "GET #show" do
     before(:each) do
-      @user =   FactoryGirl.create :user
+      @user = FactoryGirl.create :user
       get :show, id: @user.id
     end
 
@@ -28,24 +28,45 @@ RSpec.describe UsersController, type: :controller do
 
     it 'returns the same user' do
       @user_response = JSON.parse(response.body)
-      expect(@user_response['email'] ).to eql @user.email
+      expect(@user_response['email']).to eql @user.email
     end
   end
 
   describe "POST #create" do
-    before(:each) do
-      @user = FactoryGirl.attributes_for :user
-      post :create, { user: @user }
+    context 'when created successfully' do
+      before(:each) do
+        @user = FactoryGirl.attributes_for :user
+        post :create, { user: @user }
+      end
+
+      it "returns http success" do
+        expect(response).to have_http_status(:created)
+      end
+
+      it 'returns user just created' do
+        @user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(@user_response[:email]).to eql @user[:email]
+      end
     end
 
-    it "returns http success" do
-      expect(response).to have_http_status(:created)
-    end
+    context 'when not created' do
+      before(:each) do
+        @user = { name: FFaker::Name.name }
+        post :create, { user: @user }
+      end
+      it "returns http success" do
+        expect(response).to have_http_status(422)
+      end
+      it 'returns errors' do
+        @user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(@user_response).to have_key(:errors)
+      end
 
-    it 'returns user just created' do
-      @user_response = JSON.parse(response.body)
-      expect(@user_response['email']).to eql @user.email
-    end
+      it 'returns email errors' do
+        @user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(@user_response[:errors][:email]).to include "can't be blank"
+      end
 
+    end
   end
 end

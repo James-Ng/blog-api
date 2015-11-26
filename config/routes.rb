@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   get 'users/show'
 
-  get 'users/create'
+  post 'users/create'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
