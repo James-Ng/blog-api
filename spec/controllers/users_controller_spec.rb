@@ -69,4 +69,35 @@ RSpec.describe UsersController, type: :controller do
 
     end
   end
+
+  describe "PUT #update" do
+    before(:each) do
+      @user = FactoryGirl.create :user
+      @email = 'new@gmail.com'
+      put :update, {id: @user.id, user: { email: @email } }
+    end
+
+    it "returns http success" do
+      expect(response).to have_http_status(200)
+    end
+
+    it 'returns json for updated user' do
+      @user_response = JSON.parse(response.body)
+      expect(@user_response['email']).to eql @email
+    end
+  end
+
+  describe "DELETE #destroy" do
+    before(:each) do
+      @user = FactoryGirl.create :user
+
+      delete :destroy, id: @user.id
+    end
+
+    it "returns http success" do
+      expect(response).to have_http_status(204)
+    end
+
+  end
+
 end
