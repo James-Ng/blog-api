@@ -26,10 +26,26 @@ RSpec.describe UsersController, type: :controller do
       expect(response).to have_http_status(:success)
     end
 
-    it 'returns the user just created' do
+    it 'returns the same user' do
       @user_response = JSON.parse(response.body)
       expect(@user_response['email'] ).to eql @user.email
     end
   end
 
+  describe "POST #create" do
+    before(:each) do
+      @user = FactoryGirl.attributes_for :user
+      post :create, { user: @user }
+    end
+
+    it "returns http success" do
+      expect(response).to have_http_status(:created)
+    end
+
+    it 'returns user just created' do
+      @user_response = JSON.parse(response.body)
+      expect(@user_response['email']).to eql @user.email
+    end
+
+  end
 end
