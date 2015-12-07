@@ -4,3 +4,4 @@ class ApplicationController < ActionController::API
     render text: 'hello'
   end
 end
+
