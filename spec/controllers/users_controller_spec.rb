@@ -11,7 +11,7 @@ RSpec.describe UsersController, type: :controller do
     it { should respond_with 200 }
 
     it "returns 2 records" do
-      @users = JSON.parse(response.body)
+      @users = json_response
       expect(@users.size).to eql 2
     end
   end
@@ -21,14 +21,11 @@ RSpec.describe UsersController, type: :controller do
       @user = FactoryGirl.create :user
       get :show, id: @user.id
     end
-
-    it "returns http success" do
-      expect(response).to have_http_status(:success)
-    end
+    it { should respond_with :success }
 
     it 'returns the same user' do
-      @user_response = JSON.parse(response.body)
-      expect(@user_response['email']).to eql @user.email
+      @user_response = json_response
+      expect(@user_response[:email]).to eql @user.email
     end
   end
 
@@ -39,12 +36,10 @@ RSpec.describe UsersController, type: :controller do
         post :create, { user: @user }
       end
 
-      it "returns http success" do
-        expect(response).to have_http_status(:created)
-      end
+      it { should respond_with :created }
 
       it 'returns user just created' do
-        @user_response = JSON.parse(response.body, symbolize_names: true)
+        @user_response = json_response
         expect(@user_response[:email]).to eql @user[:email]
       end
     end
@@ -54,16 +49,14 @@ RSpec.describe UsersController, type: :controller do
         @user = { name: FFaker::Name.name }
         post :create, { user: @user }
       end
-      it "returns http success" do
-        expect(response).to have_http_status(422)
-      end
+      it { should respond_with :unprocessable_entity }
       it 'returns errors' do
-        @user_response = JSON.parse(response.body, symbolize_names: true)
+        @user_response = json_response
         expect(@user_response).to have_key(:errors)
       end
 
       it 'returns email errors' do
-        @user_response = JSON.parse(response.body, symbolize_names: true)
+        @user_response = json_response
         expect(@user_response[:errors][:email]).to include "can't be blank"
       end
 
@@ -77,26 +70,21 @@ RSpec.describe UsersController, type: :controller do
       put :update, {id: @user.id, user: { email: @email } }
     end
 
-    it "returns http success" do
-      expect(response).to have_http_status(200)
-    end
+    it { should respond_with :success }
 
     it 'returns json for updated user' do
-      @user_response = JSON.parse(response.body)
-      expect(@user_response['email']).to eql @email
+      @user_response = json_response
+      expect(@user_response[:email]).to eql @email
     end
   end
 
   describe "DELETE #destroy" do
     before(:each) do
       @user = FactoryGirl.create :user
-
       delete :destroy, id: @user.id
     end
 
-    it "returns http success" do
-      expect(response).to have_http_status(204)
-    end
+    it { should respond_with :no_content }
 
   end
 
