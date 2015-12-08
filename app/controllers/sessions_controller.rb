@@ -14,4 +14,12 @@ class SessionsController < ApplicationController
       render json: { errors: "Invalid email or password" }, status: :unprocessable_entity
     end
   end
+
+
+  def destroy
+    user = User.find_by(auth_token: params[:id])
+    user.generate_auth_token
+    user.save
+    head 204
+  end
 end
