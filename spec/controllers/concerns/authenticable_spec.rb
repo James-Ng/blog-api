@@ -4,7 +4,7 @@ class Authentication
   include Authenticable
 end
 
-describe Authenticable, type: :controller  do
+describe Authenticable, type: :controller do
   let(:authentication) { Authentication.new }
   subject { authentication }
 

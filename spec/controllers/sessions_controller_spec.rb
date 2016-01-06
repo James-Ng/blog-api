@@ -21,6 +21,10 @@ RSpec.describe SessionsController, type: :controller do
   describe "DELETE #destroy" do
 
     before(:each) do
+      p "isse 12"
+      p "isse 13"
+      p "isse 14"
+      p "close issue 12"
       @user = FactoryGirl.create :user
       delete :destroy, id: @user.auth_token
     end
