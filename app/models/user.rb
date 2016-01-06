@@ -7,7 +7,6 @@ class User < ActiveRecord::Base
 
   def generate_auth_token
     begin
-    	p "test check"
       self.auth_token = SecureRandom.hex
     end while self.class.exists?(auth_token: auth_token)
   end
