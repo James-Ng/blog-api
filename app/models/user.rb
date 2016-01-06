@@ -9,6 +9,8 @@ class User < ActiveRecord::Base
     begin
     	p 'test 1'
     	p 'test 2'
+      	p "test pull request" 
+
       self.auth_token = SecureRandom.hex
     end while self.class.exists?(auth_token: auth_token)
   end
